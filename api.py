@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 from flask import Flask, request
@@ -39,10 +40,11 @@ class CommentsApi(Resource):
         return dict(comments=comments)
 
     def post(self):
+        form = json.loads(request.data.decode('utf-8'))
         comment = Comment(
-            author=request.form.get('author'),
-            content=request.form.get('content'),
-            date=request.form.get('date')
+            author=form.get('author'),
+            content=form.get('content'),
+            date=form.get('date')
         )
         db.session.add(comment)
         db.session.commit()
