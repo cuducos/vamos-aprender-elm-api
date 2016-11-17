@@ -17,6 +17,7 @@ class Comment(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     author = db.Column(db.String(32))
+    email = db.Column(db.String(128))
     content = db.Column(db.Text())
     date = db.Column(db.DateTime(), default=datetime.utcnow)
 
@@ -28,6 +29,7 @@ class Comment(db.Model):
         return {
             'id': self.id,
             'author': self.author,
+            'email': self.email,
             'content': self.content,
             'date': self.date.isoformat()
         }
@@ -43,6 +45,7 @@ class CommentsApi(Resource):
         form = json.loads(request.data.decode('utf-8'))
         comment = Comment(
             author=form.get('author'),
+            email=form.get('email'),
             content=form.get('content'),
             date=form.get('date')
         )
@@ -72,7 +75,7 @@ api.add_resource(CommentApi, '/api/comment/<comment_id>/')
 
 db.create_all()
 comments = (
-    dict(author='John Doe', content="Ahoy, cap'n"),
+    dict(author='John Doe', email='john@doe.net', content="Ahoy, cap'n"),
     dict(author='Joane Doe', content="What be happenin', matey?"),
     dict(author='Buccaneer', content="What say ye, ya scurvy dog"),
 )
